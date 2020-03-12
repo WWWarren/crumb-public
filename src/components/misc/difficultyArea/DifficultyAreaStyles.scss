@@ -1,0 +1,15 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.recipeCard-difficultyArea__difficultyAreaWrapper {
+
+  .recipeCard-difficultyArea__difficultyAreaBar {
+    display: flex;
+    align-items: center;
+
+    &.recipeCard-difficultyArea__difficultyAreaBarActive {
+      background: #C1666B;
+      height: 16px;
+    }
+  }
+}

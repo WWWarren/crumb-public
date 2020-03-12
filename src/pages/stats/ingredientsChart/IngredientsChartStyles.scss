@@ -1,0 +1,17 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.stats-ingredientsChart__ingredientsChartContainer {
+  display: flex;
+  justify-content: center;
+  height: 300px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.stats-ingredientsChart__noData {
+  text-align: center;
+  margin: $mMargin;
+  padding: $sPadding;
+  border: 1px solid grey;
+}

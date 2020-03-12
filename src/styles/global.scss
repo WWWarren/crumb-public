@@ -1,0 +1,82 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+html,
+body,
+body > div:first-of-type {
+	height: 100%;
+	width: 100%;
+}
+
+body{
+  padding: 0;
+  margin: 0;
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
+  font-size: 1.4rem;
+  line-height: 1.42857143;
+  color: #333;
+  -webkit-font-smoothing: antialiased; /* Chrome, Safari */
+  -moz-osx-font-smoothing: grayscale; /* Firefox */
+}
+
+:after,
+:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+h1, h2 {
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-weight: normal;
+  font-size: 20px;
+}
+
+a {
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+p {
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+
+input[type=text]::-ms-clear {
+    display: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 0 solid;
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+}

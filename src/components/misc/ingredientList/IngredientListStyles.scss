@@ -1,0 +1,41 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.misc-ingredientList__container {
+  display: block;
+  padding: $sPadding 0;
+  margin: $sMargin 0;
+  flex: 1;
+
+  .misc-ingredientList__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: $sPadding;
+    margin-bottom: 15px;
+    border-bottom: 1px solid grey;
+  }
+
+  .misc-ingredientList__content {
+    text-align: center;
+    overflow: auto;
+
+    .misc-ingredientList__item {
+      display: flex;
+      margin-bottom: $sMargin;
+
+      & > button {
+        margin-left: $sMargin;
+      }
+    }
+
+    .misc-ingredientList__noFieldsMessage {
+      border: 1px dashed grey;
+      padding: 15px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

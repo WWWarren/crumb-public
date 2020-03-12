@@ -1,0 +1,24 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.monty-results__header {
+  text-align: center;
+  margin: 75px $sMargin 0;
+}
+
+.monty-results__noResultsBox {
+  width: 80%;
+  margin: $mMargin auto;
+  padding: $mPadding;
+  text-align: center;
+  border: 2px solid grey;
+
+  .monty-results__noResultsBoxButton {
+    margin: 0 auto;
+  }
+}
+
+.monty-results__resultsRow {
+  display: flex;
+  flex-wrap: wrap;
+}

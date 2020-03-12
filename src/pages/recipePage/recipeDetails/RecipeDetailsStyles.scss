@@ -1,0 +1,87 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.recipePage-recipeDetails__recipeDetailsContainer {
+
+  .recipePage-recipeDetails__recipeDetailsIngredientContainer {
+    margin-bottom: $mMargin;
+
+    .recipePage-recipeDetails__recipeDetailsIngredient {
+      display: flex;
+      align-items: center;
+      padding-right: $sPadding;
+      margin: $sMargin 0;
+      border: 1px solid #ccc;
+
+      .recipePage-recipeDetails__recipeDetailsIngredientColor {
+        display: block;
+        width: 5px;
+        height: 60px;
+        margin-right: $sMargin;
+      }
+
+      .recipePage-recipeDetails__recipeDetailsIngredientType {
+        padding: $sPadding;
+        background: #ccc;
+        margin-left: $sMargin;
+      }
+    }
+  }
+
+  .recipePage-recipeDetails__recipeDetailsTagContainer {
+    margin-bottom: $mMargin;
+
+    .recipePage-recipeDetails__recipeDetailsTagRow {
+      display: flex;
+
+      .recipePage-recipeDetails__recipeDetailsTag {
+        padding: $sPadding;
+        background: #ccc;
+        margin: $sMargin $sMargin 0 0;
+
+      }
+    }
+  }
+}
+
+.recipePage-recipeDetails__recipeDetailsModal {
+  background: rgba($raisinBlack, 0.5);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .recipePage-recipeDetails__recipeDetailsModalBox {
+    background: $pastelGray;
+    opacity: 100%;
+    margin: auto;
+    width: 500px;
+    padding: $mPadding;
+    border: 2px solid grey;
+
+    .recipePage-recipeDetails__recipeDetailsModalBoxHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding-bottom: $mPadding;
+      margin-bottom: $mPadding;
+      border-bottom: 1px solid grey;
+
+    }
+  }
+
+  form {
+    & > div {
+      margin: $sMargin 0;
+    }
+  }
+
+}

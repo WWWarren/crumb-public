@@ -1,0 +1,36 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.dashboard-filterBar__filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: $sPadding $mPadding;
+  background: #eee;
+  margin-top: 65px;
+
+  .dashboard-filterBar__filter {
+    flex: 1 0 35%;
+    margin: $sMargin $mMargin;
+
+    @media (min-width: $mBreak) {
+      flex: 1;
+      margin: $sMargin 15px;
+    }
+
+    .dashboard-filterBar__filterTitle {
+      text-align: center;
+    }
+  }
+
+  .dashboard-filterBar__filterBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    @media (min-width: $mBreak) {
+      width: auto;
+    }
+  }
+}

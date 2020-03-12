@@ -1,0 +1,33 @@
+// Padding
+$sPadding: 10px;
+$mPadding: 20px;
+$lPadding: 40px;
+
+// Margin
+$sMargin: 10px;
+$mMargin: 20px;
+$lMargin: 40px;
+
+// Colors
+$raisinBlack: #242331;
+$darkLiver: #533E2D;
+$sunburst: #A27035;
+$deer: #B88B4A;
+$burlywood: #DDCA7D;
+$pastelGray: #D4C5C7;
+$silverSand: #C5C5C5;
+
+$brandGreen: #7EA16B;
+$brandRed: #DA9F93;
+
+
+// Font Size & Style - Headers
+h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+// Screen Sizes
+$sBreak: 375px;
+$mBreak: 768px;
+$lBreak: 1366px;

@@ -1,0 +1,96 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.stats__container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+  margin-top: 65px;
+
+  .stats__header {
+    margin: 0 0 $lMargin;
+    padding: $mPadding;
+    background: $silverSand;
+    width: 100%;
+
+    @media (min-width: $mBreak) {
+      display: flex;
+      align-items: center;
+    }
+
+    .stats__title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @media (min-width: $mBreak) {
+        margin-right: $mMargin;
+      }
+    }
+
+    .stats__icon {
+      width: 50px;
+      height: auto;
+      margin-right: $sMargin;
+    }
+
+    h1 {
+      font-size: 32px;
+      line-height: 32px;
+      margin-bottom: 0px;
+    }
+
+    p {
+      width: 100%;
+      font-size: 16px;
+      margin: $mMargin 0 0;
+
+      @media (min-width: $mBreak) {
+        margin: 0;
+      }
+    }
+  }
+
+  .stats__row {
+    margin-bottom: $lMargin;
+    width: 100%;
+
+    @media (min-width: $mBreak) {
+      display: flex;
+      justify-content: center;
+    }
+
+    &.stats__chartRow {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .stats__statBox {
+      margin: $sMargin 0;
+      padding: $sPadding;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      width: 100%;
+
+      @media (min-width: $mBreak) {
+        width: 200px;
+        height: 200px;
+        margin: $mMargin;
+      }
+
+      .stats__statBoxNumber {
+        font-size: 64px;
+      }
+    }
+
+    .stats__statBoxTitle {
+      text-align: center;
+      margin: $sMargin;
+    }
+  }
+}

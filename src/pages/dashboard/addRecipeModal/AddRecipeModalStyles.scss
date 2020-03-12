@@ -1,0 +1,59 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.dashboard-addRecipeModal__ModalPortal {
+  height: 100%;
+  width: 100%;
+  background: rgba($raisinBlack, 0.5);
+  z-index: 999;
+  position: relative;
+}
+
+.dashboard-addRecipeModal__ModalOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .dashboard-addRecipeModal__Modal {
+    background: $pastelGray;
+    opacity: 100%;
+    margin: auto;
+    width: 600px;
+    padding: $mPadding;
+    border: 2px solid grey;
+
+    .dashboard-addRecipeModal__AddRecipeModalHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid grey;
+      padding-bottom: $sPadding;
+      margin-bottom: $sMargin;
+
+      .dashboard-addRecipeModal__AddRecipeModalButtons {
+        display: flex;
+        justify-content: flex-end;
+
+      }
+    }
+
+    .dashboard-addRecipeModal__recipeDetails {
+      padding-bottom: 5px;
+    }
+  }
+}
+
+.ReactModal__Body--open {
+  #root {
+    position: fixed;
+  }
+}

@@ -1,0 +1,73 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.recipeCard-ratingArea__ratingAreaContainer {
+  position: relative;
+}
+
+.recipeCard-ratingArea__ratingAreaDetails {
+  display: flex;
+  span {
+    margin-right: 4px;
+  }
+}
+
+.recipeCard-ratingArea__ratingAreaIcon {
+  width: 10px;
+  height: auto;
+  margin-right: 5px;
+  cursor: pointer;
+
+  & path {
+    fill: none;
+    stroke: #333;
+    stroke-width: 3px;
+  }
+
+  &.recipeCard-ratingArea__ratingAreaIconActive path {
+    fill: #D4B483;
+    stroke: #ccc;
+  }
+
+  &.recipeCard-ratingArea__ratingAreaIconHover path {
+    fill: $brandGreen;
+    stroke: #ccc;
+  }
+}
+
+.recipeCard-ratingArea__ratingAreaTitle {
+  display: flex;
+  align-items: center;
+
+  .recipeCard-ratingArea__ratingAreaButton {
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 12px;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.recipeCard-ratingArea__ratingAreaBox {
+  z-index: 999;
+  display: flex;
+  height: 20px;
+  background: #fff;
+
+  .recipeCard-ratingArea__ratingAreaIconBox {
+    display: flex;
+    background: #fff;
+  }
+
+  .recipeCard-ratingArea__ratingAreaBoxColor {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #D4B483;
+  }
+}

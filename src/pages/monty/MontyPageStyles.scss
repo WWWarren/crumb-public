@@ -1,0 +1,71 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.monty__container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 65px;
+
+  .monty__header {
+    margin: 0 0 $lMargin;
+    padding: $mPadding;
+    background: $silverSand;
+    width: 100%;
+
+    @media (min-width: $mBreak) {
+      display: flex;
+      align-items: center;
+    }
+
+    .monty__title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @media (min-width: $mBreak) {
+        margin-right: $mMargin;
+      }
+    }
+
+    .monty__icon {
+      width: 50px;
+      height: auto;
+      margin-right: $sMargin;
+    }
+
+    h1 {
+      font-size: 32px;
+      line-height: 32px;
+      margin-bottom: 0px;
+    }
+
+    p {
+      width: 100%;
+      font-size: 16px;
+      margin: $mMargin 0 0;
+
+      @media (min-width: $mBreak) {
+        margin: 0;
+      }
+    }
+  }
+
+  .monty__form {
+    width: 100%;
+
+    .monty__form-row {
+
+      & > div {
+        margin: $sMargin;
+      }
+
+      @media (min-width: $mBreak) {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+    }
+  }
+}

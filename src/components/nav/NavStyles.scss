@@ -1,0 +1,137 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.nav__nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $raisinBlack;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav__pageLinks {
+    width: 100%;
+    justify-content: space-around;
+
+    .nav__navLink, .nav__navLinkAvatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: $sPadding $sPadding;
+      transition: all 0.3s;
+
+      .nav_navLinkImg {
+        fill: $pastelGray;
+        width: 25px;
+        height: auto;
+        transition: all 0.3s;
+      }
+
+      h3 {
+        color: $pastelGray;
+        transition: all 0.3s;
+        display: none;
+
+        @media (min-width: $mBreak) {
+          display: inline-block;
+          margin-left: $sMargin;
+        }
+      }
+
+      &:hover {
+        text-decoration: none;
+        cursor: pointer;
+
+        .nav_navLinkImg {
+          fill: $brandGreen;
+        }
+
+        h3 {
+          color: $brandGreen;
+        }
+      }
+
+      &.nav__navLinkActive {
+        .nav_navLinkImg {
+          fill: $deer;
+        }
+        h3 {
+          color: $deer;
+        }
+      }
+
+      &.nav__navLinkHome {
+        color: $pastelGray;
+        font-weight: bold;
+        font-size: 3.2rem;
+
+        &:hover {
+          color: $brandGreen;
+        }
+
+        h3 {
+          font-size: 1.6rem;
+        }
+      }
+    }
+
+    .nav__navLinkAvatar {
+      .nav_navLinkImg {
+        fill: $silverSand;
+      }
+      h3 {
+        color: $silverSand;
+      }
+    }
+  }
+
+  .nav__navLogo {
+    width: 50px;
+    height: 37px;
+  }
+
+  .nav__navLogOut {
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: $sPadding $sPadding;
+    display: flex;
+    align-items: center;
+
+    .nav_navLinkImg {
+      fill: $pastelGray;
+      width: 25px;
+      height: auto;
+      transition: all 0.3s;
+    }
+
+    h3 {
+      color: $pastelGray;
+      transition: all 0.3s;
+      display: none;
+
+      @media (min-width: $mBreak) {
+        display: inline-block;
+        margin-left: $sMargin;
+      }
+    }
+
+    &:hover {
+      text-decoration: none;
+      cursor: pointer;
+      .nav_navLinkImg {
+        fill: $brandGreen;
+      }
+      h3 {
+        color: $brandGreen;
+      }
+    }
+  }
+}

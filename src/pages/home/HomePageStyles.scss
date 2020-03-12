@@ -1,0 +1,157 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.home__container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background: $raisinBlack;
+  color: $pastelGray;
+
+  @media (min-width: 780px) {
+    height: 100%;
+  }
+
+  .home__navBar {
+    background: $raisinBlack;
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .home__logoutLink {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: $sPadding;
+    transition: all 0.3s;
+    font-size: 1rem;
+
+    @media (min-width: $mBreak) {
+      font-size: 1.6rem;
+      padding: $mPadding;
+    }
+
+    .logout {
+      height: auto;
+      margin-right: $sMargin;
+      width: 15px;
+      fill: $pastelGray;
+      transition: all 0.3s;
+
+      @media (min-width: $mBreak) {
+        width: 30px;
+      }
+    }
+
+    &:hover {
+      color: #7EA16B;
+      .logout {
+        fill: #7EA16B;
+      }
+    }
+
+
+  }
+
+  .home__wrapper {
+    width: 100%;
+  }
+
+  .home__row {
+    margin: $lMargin 0 0;
+
+    @media (min-width: $mBreak) {
+      display: flex;
+      justify-content: center;
+    }
+
+    .home__listItem {
+      width: 100%;
+      background: $pastelGray;
+      border: 3px solid grey;
+      color: #333;
+      display: block;
+      margin-bottom: $mMargin;
+
+      @media (min-width: $mBreak) {
+        margin: $sMargin;
+      }
+
+      @media (min-width: $lBreak) {
+        margin: $mMargin;
+        max-width: 400px;
+      }
+
+      &:hover {
+        .home__listItemImg {
+          background: #7EA16B;
+          .stats, .dashboard, .monty, .preferences {
+            fill: #333;
+          }
+        }
+      }
+
+      .home__listItemImg {
+        height: 200px;
+        width: 100%;
+        padding: $mPadding;
+        background: #fff;
+        border-bottom: 3px solid grey;
+        transition: all 0.3s;
+
+        .stats, .dashboard, .monty, .preferences {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .home__listItemDetails {
+        padding: $mPadding;
+
+        h2 {
+          margin: 0 0 $mMargin;
+          text-align: center;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .home__userSection {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    @media (min-width: $mBreak) {
+      margin-top: 50px;
+    }
+
+    h1 {
+      font-size: 40px;
+      line-height: 40px;
+      margin: $mMargin $sMargin 0;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 30px;
+      line-height: 30px;
+      margin: $sMargin 0 0;
+    }
+
+    .home__userSectionAvatar {
+      height: 140px;
+      width: 140px;
+      display: none;
+
+      @media (min-width: $mBreak) {
+        display: block;
+      }
+    }
+  }
+}

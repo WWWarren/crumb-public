@@ -1,0 +1,66 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.recipePage__recipePageContainer {
+  height: 100%;
+  position: relative;
+  margin-top: 65px;
+
+  .recipePage__recipePageWrapper {
+    margin: 65px $sMargin $mMargin;
+    padding: $mPadding;
+    border: 2px solid $silverSand;
+
+    .recipePage__recipePageDetails {
+      border-bottom: 1px solid $silverSand;
+      padding-bottom: $mPadding;
+      margin-bottom: $mMargin;
+      display: flex;
+      justify-content: space-between;
+
+      .recipePage__recipePageStats {
+
+        @media (min-width: $mBreak) {
+          display: flex;
+        }
+
+        > div {
+          margin-right: $mMargin;
+          margin-bottom: $sMargin;
+        }
+      }
+
+      .recipePage__recipePageImage {
+        width: 150px;
+        display: none;
+
+        @media (min-width: $mBreak) {
+          display: block;
+        }
+
+        & img {
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      .recipePage_recipePageIngredients {
+        margin: $mMargin 0;
+      }
+    }
+  }
+
+  .recipePage__recipePageActions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: $sMargin;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+
+    button {
+      margin-left: $sMargin;
+    }
+  }
+}

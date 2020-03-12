@@ -1,0 +1,22 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.preferences__pageContainer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 65px;
+
+  .preferences__pageBlock {
+    width: 100%;
+    max-width: 600px;
+    margin: $lMargin 0 0;
+    padding: $mPadding;
+    border: 2px solid $pastelGray;
+
+    .preferences__searchLink {
+      display: block;
+    }
+  }
+}

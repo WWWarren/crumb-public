@@ -1,0 +1,26 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../styles/defaults';
+
+.dashboard__recipesRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 100px;
+
+  .dashboard__recipesColumn {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.dashboard__dashboardActionsRow {
+  position: fixed;
+  bottom: 0;
+
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  padding: $mPadding;
+  background: $raisinBlack;
+}

@@ -1,0 +1,27 @@
+// Import default padding, margin, fonts, colors, etc.
+@import '../../../styles/defaults';
+
+.recipePage-commentArea__commentAreaHeader {
+  display: flex;
+  align-items: center;
+
+  .recipePage-commentArea__commentAreaTitle {
+
+  }
+
+  .recipePage-commentArea__commentAreaButton {
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: bold;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.recipePage-commentArea__commentAreaComment {
+  border: 1px solid #ccc;
+  padding: $sPadding;
+  margin-top: $sMargin;
+
+}
