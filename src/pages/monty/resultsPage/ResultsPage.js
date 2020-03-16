@@ -77,7 +77,7 @@ export class ResultsPage extends Component {
         <div className="monty-results__noResultsBox">
           <h2>No Results :(</h2>
           <p>
-            Monty was unsuccessful in finding a recipe from his own persona cookbook
+            Monty was unsuccessful in finding a recipe from his own personal cookbook
             containing all the ingredients you've specified. Please return to the
             previous page, select some new ingredients and see whether Monty can redeem
             himself.

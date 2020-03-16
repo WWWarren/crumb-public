@@ -9,9 +9,9 @@
   margin-top: 65px;
 
   .preferences__pageBlock {
-    width: 100%;
+    width: calc(100% - (#{$sMargin} * 2));
     max-width: 600px;
-    margin: $lMargin 0 0;
+    margin: $mMargin $sMargin 0;
     padding: $mPadding;
     border: 2px solid $pastelGray;
 

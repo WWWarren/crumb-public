@@ -16,7 +16,7 @@ export class MontyPage extends Component {
     meatCheese: null,
     sauce: null,
     salad: null,
-    bread: null,
+    misc: null,
     invalidSubmission: false,
     invalidSubmissionReason: '',
   }
@@ -33,11 +33,14 @@ export class MontyPage extends Component {
     const meatCheeseArray = [];
     const sauceArray = [];
     const saladArray = [];
-    const breadArray = [];
+    const miscArray = [];
 
     ingredients.forEach(ingred => {
       switch (ingred.type) {
         case 'meat':
+          meatCheeseArray.push(ingred);
+          break;
+        case 'cheese':
           meatCheeseArray.push(ingred);
           break;
         case 'sauce':
@@ -46,8 +49,8 @@ export class MontyPage extends Component {
         case 'salad':
           saladArray.push(ingred);
           break;
-        case 'bread':
-          breadArray.push(ingred);
+        case 'misc':
+          miscArray.push(ingred);
           break;
         default:
           break;
@@ -58,7 +61,7 @@ export class MontyPage extends Component {
       meatCheese: meatCheeseArray,
       sauce: sauceArray,
       salad: saladArray,
-      bread: breadArray,
+      misc: miscArray,
     }))
   }
 
@@ -67,51 +70,60 @@ export class MontyPage extends Component {
   // Submit form & search params to database
   onSubmit = (formValues) => {
     // Remove duplicate values in Redux Form
-    const fields = Object.entries(this.props.form.registeredFields);
-    const arr = Object.entries(formValues);
-    const ingredientsList = [];
-    fields.forEach(f => {
-      console.log(f);
-      const neu = arr.filter(a => {
-        if (a[0] === f[0]) {
-          return (
-            a[1]
-          )
-        };
-        return null;
+    console.log(this.props.form);
+    const { form } = this.props
+    if (form && form.values && form.registeredFields) {
+      const fields = Object.entries(form.registeredFields);
+      const arr = Object.entries(formValues);
+      const ingredientsList = [];
+      fields.forEach(f => {
+        console.log(f);
+        const neu = arr.filter(a => {
+          if (a[0] === f[0]) {
+            return (
+              a[1]
+            )
+          };
+          return null;
+        });
+
+        if (neu) {
+          ingredientsList.push(neu[0][1]);
+        }
       });
 
-      if (neu) {
-        ingredientsList.push(neu[0][1]);
-      }
-    });
-
-    // Turn ingredients object into array and check if it's a valid list (no duplicates, etc.)
-    const checkIngredientListIsValid = ingredientsList.filter((item, index) => ingredientsList.indexOf(item) !== index);
-    if (checkIngredientListIsValid.length > 0) {
-      this.setState(() => ({
-        invalidSubmission: true,
-        invalidSubmissionReason: 'Please remove any duplicated items for the lists'
-      }))
-    } else {
-      // Create search object and submit to database providing there are ingredients present
-      const obj = {
-        ingredients: ingredientsList,
-        userID: this.props.user.id,
-        createdOn: moment().locale('en-gb').format('L'),
-      };
-
-      if (obj.ingredients.length === 0) {
+      // Turn ingredients object into array and check if it's a valid list (no duplicates, etc.)
+      const checkIngredientListIsValid = ingredientsList.filter((item, index) => ingredientsList.indexOf(item) !== index);
+      if (checkIngredientListIsValid.length > 0) {
         this.setState(() => ({
           invalidSubmission: true,
-          invalidSubmissionReason: 'Please select at least one ingredient',
+          invalidSubmissionReason: 'Please remove any duplicated items for the lists'
         }))
       } else {
-        this.props.postSearch(obj);
-        this.setState(() => ({
-          invalidSubmission: false,
-        }))
+        // Create search object and submit to database providing there are ingredients present
+        const obj = {
+          ingredients: ingredientsList,
+          userID: this.props.user.id,
+          createdOn: moment().locale('en-gb').format('L'),
+        };
+
+        if (obj.ingredients.length === 0) {
+          this.setState(() => ({
+            invalidSubmission: true,
+            invalidSubmissionReason: 'Please select at least one ingredient',
+          }))
+        } else {
+          this.props.postSearch(obj);
+          this.setState(() => ({
+            invalidSubmission: false,
+          }))
+        }
       }
+    } else {
+      this.setState(() => ({
+        invalidSubmission: true,
+        invalidSubmissionReason: 'Please select at least one ingredient',
+      }))
     }
   }
 
@@ -158,9 +170,9 @@ export class MontyPage extends Component {
               ingredients={this.state.salad}
             />
             <IngredientList
-              type="bread"
-              name="Bread"
-              ingredients={this.state.bread}
+              type="misc"
+              name="Misc."
+              ingredients={this.state.misc}
             />
           </div>
         </Form>

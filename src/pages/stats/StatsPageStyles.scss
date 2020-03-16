@@ -68,14 +68,14 @@
     }
 
     .stats__statBox {
-      margin: $sMargin 0;
+      margin: $sMargin;
       padding: $sPadding;
       border: 1px solid #ccc;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      width: 100%;
+      width: calc(100% - (#{$sMargin} * 2));
 
       @media (min-width: $mBreak) {
         width: 200px;

@@ -4,13 +4,10 @@
 .home__container {
   align-items: center;
   display: flex;
+  flex: 1;
   justify-content: center;
   background: $raisinBlack;
   color: $pastelGray;
-
-  @media (min-width: 780px) {
-    height: 100%;
-  }
 
   .home__navBar {
     background: $raisinBlack;
@@ -70,19 +67,14 @@
     }
 
     .home__listItem {
-      width: 100%;
+      width: calc(100% - (#{$sMargin} * 2));
       background: $pastelGray;
       border: 3px solid grey;
       color: #333;
       display: block;
-      margin-bottom: $mMargin;
+      margin: $sMargin;
 
       @media (min-width: $mBreak) {
-        margin: $sMargin;
-      }
-
-      @media (min-width: $lBreak) {
-        margin: $mMargin;
         max-width: 400px;
       }
 

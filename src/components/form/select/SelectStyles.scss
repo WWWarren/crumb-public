@@ -38,7 +38,6 @@
 
   .form-select__selectOptions {
     background: #fff;
-    border: 1px solid #ccc;
     width: 100%;
     position: absolute;
     z-index: 999;
@@ -66,6 +65,9 @@
   }
 
   // Scrollbar styles
+  .ScrollbarsCustom {
+    border: 1px solid #ccc;
+  }
   .trackYVisible {
     background: #eee;
   }

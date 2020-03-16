@@ -79,6 +79,11 @@ export function postUser(values, callback) {
       const user = firebase.auth().currentUser;
       const obj = {
         id: user.uid,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        country: values.country,
+        age: values.age,
+        email: values.email
       }
       database.ref(`/users`).child(user.uid).set(obj);
       callback();
