@@ -97,7 +97,6 @@ export function postUser(values, callback) {
 //
 // Update user object in database and store
 export function updateUserDetails(values) {
-  console.log(values);
   return (dispatch) => {
     //
     // Dispatch user to database
