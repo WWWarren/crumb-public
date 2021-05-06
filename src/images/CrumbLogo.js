@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import './CrumbLogoStyles.scss';
 
-class CrumbLogo extends Component {
-  getColor = (item) => {
-    const { ingredients } = this.props;
+const CrumbLogo = ({ items, defaultLogo, className, ingredients }) => {
+  function getColor(item) {
     let color;
 
     ingredients.forEach(d => {
@@ -17,43 +16,40 @@ class CrumbLogo extends Component {
     return color;
   }
 
-  render() {
-    const { items, defaultLogo, className } = this.props;
-    return (
-      <div
-        className={`${'crumbLogo__container'} ${className}`}
-      >
-        <span
-          className="crumbLogo__topSlice"
-        />
-        {
-          items && items.map((item, key) => (
+  return (
+    <div
+      className={`${'crumbLogo__container'} ${className}`}
+    >
+      <span
+        className="crumbLogo__topSlice"
+      />
+      {
+        items && items.map((item, key) => (
+          <span
+            key={key}
+            style={{ background: getColor(item) }}
+            className="crumbLogo__fillingItem"
+          />
+        ))
+      }
+      {
+        defaultLogo &&
+          <>
             <span
-              key={key}
-              style={{ background: this.getColor(item) }}
+              style={{ background: '#7EA16B' }}
               className="crumbLogo__fillingItem"
             />
-          ))
-        }
-        {
-          defaultLogo &&
-            <>
-              <span
-                style={{ background: '#7EA16B' }}
-                className="crumbLogo__fillingItem"
-              />
-              <span
-                style={{ background: '#DA9F93' }}
-                className="crumbLogo__fillingItem"
-              />
-            </>
-        }
-        <span
-          className="crumbLogo__bottomSlice"
-        />
-      </div>
-    );
-  }
+            <span
+              style={{ background: '#DA9F93' }}
+              className="crumbLogo__fillingItem"
+            />
+          </>
+      }
+      <span
+        className="crumbLogo__bottomSlice"
+      />
+    </div>
+  );
 }
 
 export function mapStateToProps({ ingredients }) {

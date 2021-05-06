@@ -1,21 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import IngredientsChart from './ingredientsChart/IngredientsChart';
 import StatsIcon from '../../images/icons/StatsIcon';
 
-import './StatsPageStyles.scss';
+import './StatsPage.scss';
 
-export class StatsPage extends Component {
-  showNumberOfComments = (comments) => {
-    const { user } = this.props;
+const StatsPage = ({
+  user,
+  ingredients,
+  recipes, 
+  comments
+}) => {
+  function showNumberOfComments(comments) {
     const commentsWritten = comments.filter(c => c.userID === user.id);
     return commentsWritten.length || 0;
   }
 
-  showNumberOfRatings = (recipes) => {
-    const { user } = this.props;
+  function showNumberOfRatings(recipes) {
     const timesRated = [];
 
     recipes.forEach(re => {
@@ -31,8 +34,7 @@ export class StatsPage extends Component {
     return timesRated.length || 0;
   }
 
-  showPopularIngredients = (comments, recipes) => {
-    const { user, ingredients } = this.props;
+  function showPopularIngredients(comments, recipes) {
     const recipesInteractedWith = [];
     const ingredientsPresent = [];
 
@@ -101,75 +103,73 @@ export class StatsPage extends Component {
     }
   }
 
-  render() {
-    const { user, recipes, comments } = this.props;
-    const ingredientData = this.showPopularIngredients(comments, recipes);
-    return (
-      <div className="stats__container">
-        <div className="stats__header">
-          <div className="stats__title">
-            <StatsIcon
-              className="stats__icon"
-            />
-            <h1>Stats</h1>
-          </div>
-          <p>
-            As you use crumb stats about your interactions with recipes will appear here.
-            These will range from simple number values from comments to charts showing your
-            favourite ingredients within recipes you've interacted with.
-          </p>
+  const ingredientData = showPopularIngredients(comments, recipes);
+
+  return (
+    <div className="stats__container">
+      <div className="stats__header">
+        <div className="stats__title">
+          <StatsIcon
+            className="stats__icon"
+          />
+          <h1>Stats</h1>
         </div>
-        <div className="stats__row">
-          <div className="stats__statBox">
-            <h3
-              className="stats__statBoxTitle"
-            >
-              Recipes Rated
-            </h3>
-            <div className="stats__statBoxNumber">
-              {this.showNumberOfRatings(recipes)}
-            </div>
-          </div>
-          <div className="stats__statBox">
-            <h3
-              className="stats__statBoxTitle"
-            >
-              Comments Written
-            </h3>
-            <div className="stats__statBoxNumber">
-              {this.showNumberOfComments(comments)}
-            </div>
-          </div>
-          <div className="stats__statBox">
-            <h3
-              className="stats__statBoxTitle"
-            >
-              Recipes Added
-            </h3>
-            <div className="stats__statBoxNumber">
-              {
-                user.recipes ?
-                user.recipes.length :
-                0
-              }
-            </div>
-          </div>
-        </div>
-        <div className="stats__row stats__chartRow">
+        <p>
+          As you use crumb stats about your interactions with recipes will appear here.
+          These will range from simple number values from comments to charts showing your
+          favourite ingredients within recipes you've interacted with.
+        </p>
+      </div>
+      <div className="stats__row">
+        <div className="stats__statBox">
           <h3
             className="stats__statBoxTitle"
           >
-            Most Popular Ingredients (These are ingredients included on recipes that you've rated or commented on)
+            Recipes Rated
           </h3>
-          <IngredientsChart
-            data={ingredientData}
-            dataKey="total"
-            barColorKey="color"
-          />
+          <div className="stats__statBoxNumber">
+            {showNumberOfRatings(recipes)}
+          </div>
+        </div>
+        <div className="stats__statBox">
+          <h3
+            className="stats__statBoxTitle"
+          >
+            Comments Written
+          </h3>
+          <div className="stats__statBoxNumber">
+            {showNumberOfComments(comments)}
+          </div>
+        </div>
+        <div className="stats__statBox">
+          <h3
+            className="stats__statBoxTitle"
+          >
+            Recipes Added
+          </h3>
+          <div className="stats__statBoxNumber">
+            {
+              user.recipes ?
+              user.recipes.length :
+              0
+            }
+          </div>
         </div>
       </div>
-    )
-  }
+      <div className="stats__row stats__chartRow">
+        <h3
+          className="stats__statBoxTitle"
+        >
+          Most Popular Ingredients (These are ingredients included on recipes that you've rated or commented on)
+        </h3>
+        <IngredientsChart
+          data={ingredientData}
+          dataKey="total"
+          barColorKey="color"
+        />
+      </div>
+    </div>
+  )
 }
 
 export function mapStateToProps({ user, comments, recipes, ingredients }) {

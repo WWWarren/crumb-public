@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router";
 
 import { getRecipes, clearRecipe } from '../../store/actions/recipes';
-import { history } from '../../store/store';
 
 import Container from '../../components/layout/Container';
 import { SecondaryButton } from '../../components/buttons/Buttons';
@@ -12,54 +12,30 @@ import RecipeCard from './recipeCard/RecipeCard';
 import AddRecipeModal from './addRecipeModal/AddRecipeModal';
 import FilterBar from './filterBar/FilterBar';
 
-import './DashboardPageStyles.scss';
+import './DashboardPage.scss';
 
-export class DashboardPage extends Component {
-  constructor(props){
-    super(props)
+const DashboardPage = ({ getRecipes, clearRecipe, history, recipes }) => {
+  const [filters, setFilters] = useState([]);
+  const [open, setOpen] = useState(false);
 
-    this.state = {
-      filters: [],
-      open: false,
-    }
-  }
+  useEffect(() => {
+    getRecipes();
 
-  componentDidMount = () => {
-    // Get recipes from database and add them to local state
-    this.props.getRecipes();
-  }
+    return () => {
+      clearRecipe();
+    };
+  }, [getRecipes, clearRecipe]);
 
-  componentWillUnmount = () => {
-    // Clear selected recipe from store
-    this.props.clearRecipe();
-  }
-
-  selectRecipe = (id) => {
+  function selectRecipe(id) {
     // Open modal
     if (id === 'new') {
-      this.setState(() => ({
-        open: true,
-      }))
+      setOpen(true)
     } else {
       history.push(`/dashboard/${id}`)
     }
   }
 
-  closeModal = () => {
-    // Close modal
-    this.setState(() => ({
-      open: false,
-    }))
-  }
-
-  changeFilters = (filters) => {
-    this.setState(() => ({
-      filters
-    }))
-  }
-
-  filterList = (values) => {
-    const { filters } = this.state;
+  function filterList(values) {
     let list = [...values];
 
     filters.forEach(f => {
@@ -80,80 +56,75 @@ export class DashboardPage extends Component {
     return list;
   }
 
-  render() {
-    const { recipes } = this.props;
-    const { open } = this.state;
-    if (!recipes) return null;
+  if (!recipes) return null;
+  const list = recipes.map(r => {
+    let total = 0;
+    const rating = r.rating ? r.rating : [];
 
-    const list = recipes.map(r => {
-      let total = 0;
-      const rating = r.rating ? r.rating : [];
+    if (rating) {
+      rating.forEach((ra) => {
+        let num = ra.rating;
+        num = Number(num);
+        total = total + num;
+      });
+    }
 
-      if (rating) {
-        rating.forEach((r) => {
-          let num = r.rating;
-          num = Number(num);
-          total = total + num;
-        });
-      }
+    const obj = {
+      ...r,
+      totalRating: (total / rating.length),
+    }
 
-      const obj = {
-        ...r,
-        totalRating: (total / rating.length),
-      }
+    return obj;
+  })
 
-      return obj;
-    })
-
-    const newList = this.filterList(list);
-    return (
-      <>
-      <Container
-        flexDirection="column"
+  const newList = filterList(list);
+  return (
+    <>
+    <Container
+      flexDirection="column"
+    >
+      <FilterBar
+        filters={filters}
+        changeFilters={(f) => setFilters(f)}
+      />
+      <div
+        className="dashboard__recipesRow"
       >
-        <FilterBar
-          filters={this.state.filters}
-          changeFilters={this.changeFilters}
+        <div
+          className="dashboard__recipesColumn"
+        >
+          {
+            newList.map((recipe, i) => (
+              <RecipeCard
+                key={i}
+                recipe={recipe}
+                onClick={() => selectRecipe(recipe.id)}
+              />
+            ))
+          }
+        </div>
+      </div>
+      <div
+        className="dashboard__dashboardActionsRow"
+      >
+        <SecondaryButton
+          onClick={() => selectRecipe('new')}
+        >
+          Add Recipe
+        </SecondaryButton>
+      </div>
+    </Container>
+    <>
+      {
+        open &&
+        <AddRecipeModal
+          open={open}
+          close={() => setOpen(false)}
         />
-        <div
-          className="dashboard__recipesRow"
-        >
-          <div
-            className="dashboard__recipesColumn"
-          >
-            {
-              newList.map((recipe, i) => (
-                <RecipeCard
-                  key={i}
-                  recipe={recipe}
-                  onClick={() => this.selectRecipe(recipe.id)}
-                />
-              ))
-            }
-          </div>
-        </div>
-        <div
-          className="dashboard__dashboardActionsRow"
-        >
-          <SecondaryButton
-            onClick={() => this.selectRecipe('new')}
-          >
-            Add Recipe
-          </SecondaryButton>
-        </div>
-      </Container>
-      <>
-        {
-          open &&
-          <AddRecipeModal
-            open={open}
-            close={this.closeModal}
-          />
-        }
-      </>
+      }
     </>
-    )
-  }
+  </>
+  )
 }
 
 export function mapStateToProps({ recipes }) {
@@ -162,13 +133,13 @@ export function mapStateToProps({ recipes }) {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   {
     getRecipes,
     clearRecipe
   }
-)(DashboardPage);
+)(DashboardPage));
 
 DashboardPage.propTypes = {
   getRecipes: PropTypes.func,

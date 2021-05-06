@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import { connect } from 'react-redux';
@@ -10,20 +10,23 @@ import Block from '../../../components/layout/Block';
 import Form from '../../../components/form/FormContainer';
 import TextArea from '../../../components/form/textarea/TextArea';
 
-import './CommentAreaStyles.scss';
+import './CommentArea.scss';
 
-export class CommentArea extends Component {
-  state = {
-    addComment: false,
-  }
+const CommentArea = ({
+  getComments,
+  postComment,
+  comments,
+  recipeId,
+  user
+}) => {
+  const [addComment, setAddComment] = useState(false);
 
-  componentDidMount = () => {
-    this.props.getComments();
-  }
+  useEffect(() => {
+    getComments();
+  }, []);
 
-  showComments = () => {
-    const comments = this.props.comments;
-    const comment = comments.filter(c => c.recipe === this.props.recipeId).map((c, i) => (
+  function showComments() {
+    const comment = comments.filter(c => c.recipe === recipeId).map((c, i) => (
       <div
         key={i}
         className="recipePage-commentArea__commentAreaComment"
@@ -47,78 +50,72 @@ export class CommentArea extends Component {
     return comment;
   }
 
-  saveComment = (values) => {
-    const { user, recipeId } = this.props;
+  function saveComment(values) {
     const obj = {
       userID: user.id,
       userName: `${user.firstName} ${user.lastName}`,
-      recipe: this.props.recipeId,
+      recipe: recipeId,
       time: moment().locale('en-gb').format('L'),
       text: values.text,
     }
 
     if (values.text) {
-      this.props.postComment(obj, recipeId, () => this.setState(() => ({
-        addComment: false,
-      })));
+      postComment(obj, recipeId, () => setAddComment(false));
     }
   }
 
-  render() {
-    const { addComment } = this.state;
-    if (!this.props.comments) return null;
-    return (
-      <Block
-        display="block"
-      >
-        <div className="recipePage-commentArea__commentAreaHeader">
-          <h3
-             className="recipePage-commentArea__commentAreaTitle"
-          >
-            Comments
-          </h3>
-          {
-            addComment ?
-            <div
-              onClick={() => this.setState(() => ({ addComment: false }))}
-              className="recipePage-commentArea__commentAreaButton"
-              style={{
-                color: '#DA9F93'
-              }}
-            >
-              - Close
-            </div>
-            :
-            <div
-              onClick={() => this.setState(() => ({ addComment: true }))}
-              className="recipePage-commentArea__commentAreaButton"
-              style={{
-                color: '#7EA16B'
-              }}
-            >
-              - Add Comment
-            </div>
-          }
-        </div>
+  if (!comments) return null;
+  return (
+    <Block
+      display="block"
+    >
+      <div className="recipePage-commentArea__commentAreaHeader">
+        <h3
+           className="recipePage-commentArea__commentAreaTitle"
+        >
+          Comments
+        </h3>
         {
-          addComment &&
-          <>
-            <Form
-              form="newComment"
-              submitText="Post Comment"
-              onSubmit={this.saveComment}
-            >
-              <Field
-                name="text"
-                component={TextArea}
-              />
-            </Form>
-          </>
+          addComment ?
+          <div
+            onClick={() => setAddComment(false)}
+            className="recipePage-commentArea__commentAreaButton"
+            style={{
+              color: '#DA9F93'
+            }}
+          >
+            - Close
+          </div>
+          :
+          <div
+            onClick={() => setAddComment(true)}
+            className="recipePage-commentArea__commentAreaButton"
+            style={{
+              color: '#7EA16B'
+            }}
+          >
+            - Add Comment
+          </div>
         }
-        {this.showComments()}
-      </Block>
-    )
-  }
+      </div>
+      {
+        addComment &&
+        <>
+          <Form
+            form="newComment"
+            submitText="Post Comment"
+            onSubmit={saveComment}
+          >
+            <Field
+              name="text"
+              component={TextArea}
+            />
+          </Form>
+        </>
+      }
+      {showComments()}
+    </Block>
+  )
 }
 
 export function mapStateToProps({ user, comments, form }) {

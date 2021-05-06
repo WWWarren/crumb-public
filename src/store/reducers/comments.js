@@ -4,7 +4,7 @@ export const GET_COMMENTS = 'GET_COMMENTS';
 // Post
 export const ADD_COMMENT = 'ADD_COMMENT';
 
-export default (
+const comments = (
   state = {
     list: [],
   }, action) => {
@@ -21,3 +21,5 @@ export default (
       return state;
   }
 };
+
+export default comments;

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Route, Switch } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import HomePage from '../pages/home/HomePage';
 import DashboardPage from '../pages/dashboard/DashboardPage';
@@ -14,11 +14,11 @@ import NotFoundPage from '../pages/notfound/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
-export class Routing extends Component {
-  render() {
-    return (
+export const Routing = () => {
+  return (
+    <BrowserRouter>
       <Switch>
-        <PublicRoute path="/" component={LoginPage} exact />
+        <PublicRoute exact path="/" component={LoginPage} />
         <PrivateRoute path="/home" component={HomePage} />
         <PrivateRoute path="/dashboard/:id" component={RecipePage} />
         <PrivateRoute path="/dashboard" component={DashboardPage} />
@@ -29,8 +29,8 @@ export class Routing extends Component {
         <PrivateRoute path="/preferences" component={PreferencesPage} />
         <Route component={NotFoundPage} />
       </Switch>
-    )
-  }
-};
+    </BrowserRouter>
+  )
+}
 
 export default Routing;

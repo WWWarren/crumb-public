@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router";
 import moment from 'moment';
 
 import { postSearch } from '../../store/actions/monty';
@@ -9,27 +10,28 @@ import Form from '../../components/form/FormContainer';
 import IngredientList from '../../components/misc/ingredientList/IngredientList';
 import MontyIcon from '../../images/icons/MontyIcon';
 
-import './MontyPageStyles.scss';
+import './MontyPage.scss';
 
-export class MontyPage extends Component {
-  state = {
+const MontyPage = ({ ingredients, form, user, postSearch, history }) => {
+  const [groups, setGroups] = useState({
     meatCheese: null,
     sauce: null,
     salad: null,
     misc: null,
+  });
+  const [submission, setSubmission] = useState({
     invalidSubmission: false,
     invalidSubmissionReason: '',
-  }
+  });
 
-  componentDidMount = () => {
-    this.sortIngredientsIntoGroups();
-  }
+  useEffect(() => {
+    sortIngredientsIntoGroups();
+  });
 
   //
   // Sort the ingredients into revelant type groups and set local state with them
   // for use in the ingredient list component
-  sortIngredientsIntoGroups = () => {
-    const ingredients = this.props.ingredients;
+  function sortIngredientsIntoGroups() {
     const meatCheeseArray = [];
     const sauceArray = [];
     const saladArray = [];
@@ -57,33 +59,29 @@ export class MontyPage extends Component {
       }
     });
 
-    this.setState(() => ({
+    setGroups({
       meatCheese: meatCheeseArray,
       sauce: sauceArray,
       salad: saladArray,
       misc: miscArray,
-    }))
+    })
   }
-
 
   //
   // Submit form & search params to database
-  onSubmit = (formValues) => {
+  function onSubmit(formValues) {
     // Remove duplicate values in Redux Form
-    console.log(this.props.form);
-    const { form } = this.props
     if (form && form.values && form.registeredFields) {
       const fields = Object.entries(form.registeredFields);
       const arr = Object.entries(formValues);
       const ingredientsList = [];
       fields.forEach(f => {
-        console.log(f);
         const neu = arr.filter(a => {
           if (a[0] === f[0]) {
             return (
               a[1]
             )
-          };
+          }
           return null;
         });
 
@@ -95,90 +93,89 @@ export class MontyPage extends Component {
       // Turn ingredients object into array and check if it's a valid list (no duplicates, etc.)
       const checkIngredientListIsValid = ingredientsList.filter((item, index) => ingredientsList.indexOf(item) !== index);
       if (checkIngredientListIsValid.length > 0) {
-        this.setState(() => ({
+        setSubmission({
           invalidSubmission: true,
           invalidSubmissionReason: 'Please remove any duplicated items for the lists'
-        }))
+        })
       } else {
         // Create search object and submit to database providing there are ingredients present
         const obj = {
           ingredients: ingredientsList,
-          userID: this.props.user.id,
+          userID: user.id,
           createdOn: moment().locale('en-gb').format('L'),
         };
 
         if (obj.ingredients.length === 0) {
-          this.setState(() => ({
+          setSubmission({
             invalidSubmission: true,
             invalidSubmissionReason: 'Please select at least one ingredient',
-          }))
+          })
         } else {
-          this.props.postSearch(obj);
-          this.setState(() => ({
+          postSearch(obj, history);
+          setSubmission({
             invalidSubmission: false,
-          }))
+            invalidSubmissionReason: '',
+          })
         }
       }
     } else {
-      this.setState(() => ({
+      setSubmission({
         invalidSubmission: true,
         invalidSubmissionReason: 'Please select at least one ingredient',
-      }))
+      })
     }
   }
 
-  render() {
-    return (
-      <div
-        className="monty__container"
-      >
-        <div className="monty__header">
-          <div className="monty__title">
-            <MontyIcon
-              className="monty__icon"
-            />
-            <h1>Monty</h1>
-          </div>
-          <p>Monty is here to help with all your cooking needs.
-          Lacking inspiration for a meal or unsure of what to cook?
-          Enter your ingredients below and hit the submit button to activate Monty.</p>
+  return (
+    <div
+      className="monty__container"
+    >
+      <div className="monty__header">
+        <div className="monty__title">
+          <MontyIcon
+            className="monty__icon"
+          />
+          <h1>Monty</h1>
         </div>
-        <Form
-          form="searchForm"
-          className="monty__form"
-          onSubmit={this.onSubmit}
-          submitText="Submit"
-          errorStatus={this.state.invalidSubmission}
-          errorMessage={this.state.invalidSubmissionReason}
-        >
-          <div
-            className="monty__form-row"
-          >
-            <IngredientList
-              type="meatCheese"
-              name="Meat/Cheese"
-              ingredients={this.state.meatCheese}
-            />
-            <IngredientList
-              type="sauce"
-              name="Sauce"
-              ingredients={this.state.sauce}
-            />
-            <IngredientList
-              type="salad"
-              name="Salad"
-              ingredients={this.state.salad}
-            />
-            <IngredientList
-              type="misc"
-              name="Misc."
-              ingredients={this.state.misc}
-            />
-          </div>
-        </Form>
+        <p>Monty is here to help with all your cooking needs.
+        Lacking inspiration for a meal or unsure of what to cook?
+        Enter your ingredients below and hit the submit button to activate Monty.</p>
       </div>
-    )
-  }
+      <Form
+        form="searchForm"
+        className="monty__form"
+        onSubmit={onSubmit}
+        submitText="Submit"
+        errorStatus={submission.invalidSubmission}
+        errorMessage={submission.invalidSubmissionReason}
+      >
+        <div
+          className="monty__form-row"
+        >
+          <IngredientList
+            type="meatCheese"
+            name="Meat/Cheese"
+            ingredients={groups.meatCheese}
+          />
+          <IngredientList
+            type="sauce"
+            name="Sauce"
+            ingredients={groups.sauce}
+          />
+          <IngredientList
+            type="salad"
+            name="Salad"
+            ingredients={groups.salad}
+          />
+          <IngredientList
+            type="misc"
+            name="Misc."
+            ingredients={groups.misc}
+          />
+        </div>
+      </Form>
+    </div>
+  )
 }
 
 export function mapStateToProps({ ingredients, user, form }) {
@@ -189,12 +186,12 @@ export function mapStateToProps({ ingredients, user, form }) {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   {
     postSearch
   }
-)(MontyPage);
+)(MontyPage));
 
 MontyPage.propTypes = {
   ingredients: PropTypes.array,

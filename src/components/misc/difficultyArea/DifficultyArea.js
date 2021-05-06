@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './DifficultyAreaStyles.scss';
+import './DifficultyArea.scss';
 
 const DifficultyArea = ({ difficulty, scale }) => (
   <div

@@ -9,7 +9,7 @@ export const UPDATE_USER = 'UPDATE_USER';
 // Misc.
 export const CLEAR_USER = 'CLEAR_USER';
 
-export default (
+const user = (
   state = {
     list: [],
     activeUser: null,
@@ -36,3 +36,5 @@ export default (
       return state;
   }
 };
+
+export default user;

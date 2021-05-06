@@ -1,38 +1,34 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router";
 
 import { getSearch, clearSearch } from '../../../store/actions/monty';
-import { history } from '../../../store/store';
 
 import RecipeCard from '../../dashboard/recipeCard/RecipeCard';
 import PrimaryButton from '../../../components/buttons/Buttons';
 
-import './ResultsPageStyles.scss';
+import './ResultsPage.scss';
 
-export class ResultsPage extends Component {
-  state = {
-    recipeList: [],
-    selectedRecipe: null,
-  }
+const ResultsPage = ({ getSearch, clearSearch, match, recipes, searchRecord, history }) => {
+  const [list, setList] = useState(null);
+  const [selected, setSelected] = useState(null);
 
-  componentDidMount = () => {
-    const id = this.props.match.params.id;
+  useEffect(() => {
+    const id = match.params.id;
+    getSearch(id, () => showResults());
 
-    this.props.getSearch(id, () => this.showResults());
-  }
+    return () => {
+      clearSearch();
+    };
+  });
 
-  componentWillUnmount = () => {
-    this.props.clearSearch();
-  }
-
-  showResults = () => {
-    const { recipes, searchRecord } = this.props;
+  function showResults() {
     const recipeList = [];
 
     if (searchRecord) {
       recipes.forEach(r => {
-        const showRecipe = this.searchRecipes(r, searchRecord.ingredients);
+        const showRecipe = searchRecipes(r, searchRecord.ingredients);
 
         if (showRecipe) {
           recipeList.push(r);
@@ -41,14 +37,12 @@ export class ResultsPage extends Component {
     }
 
     if (recipeList.length > 0) {
-      this.setState(() => ({
-        recipeList,
-        selectedRecipe: searchRecord.id,
-      }))
+      setList(recipeList);
+      setSelected(searchRecord.id);
     }
   }
 
-  searchRecipes = (recipe, ingredients) => {
+  function searchRecipes(recipe, ingredients) {
     const ingredientsArr = [];
     recipe.ingredients.forEach(r => {
       const ingredientMatches = ingredients.find(i => i === r);
@@ -64,60 +58,55 @@ export class ResultsPage extends Component {
     return false;
   }
 
-  selectRecipe = (id) => {
-    const { selectedRecipe } = this.state;
-    // Add id of recipe to url
-    history.push(`/monty/${selectedRecipe}/recipe/${id}`);
+  function selectRecipe(id) {
+    history.push(`/monty/${selected}/recipe/${id}`);
   }
 
-  render() {
-    const { recipeList } = this.state;
-    if (this.state.recipeList.length === 0) {
-      return (
-        <div className="monty-results__noResultsBox">
-          <h2>No Results :(</h2>
-          <p>
-            Monty was unsuccessful in finding a recipe from his own personal cookbook
-            containing all the ingredients you've specified. Please return to the
-            previous page, select some new ingredients and see whether Monty can redeem
-            himself.
-          </p>
-          <PrimaryButton
-            onClick={() => history.push('/monty')}
-            className="monty-results__noResultsBoxButton"
-          >
-            Try Again
-          </PrimaryButton>
-        </div>
-      )
-    };
-
+  if (!list) return null;
+  if (list && list.length === 0) {
     return (
-      <>
-        <div
-          className="monty-results__header"
+      <div className="monty-results__noResultsBox">
+        <h2>No Results :(</h2>
+        <p>
+          Monty was unsuccessful in finding a recipe from his own personal cookbook
+          containing all the ingredients you've specified. Please return to the
+          previous page, select some new ingredients and see whether Monty can redeem
+          himself.
+        </p>
+        <PrimaryButton
+          onClick={() => history.push('/monty')}
+          className="monty-results__noResultsBoxButton"
         >
-          <h2>Your recipes are here</h2>
-          <p>
-            Monty has returned and brought some recipes straight from his own personal cookbook.
-            These recipes are based on the ingredients specified by yourself and can be viewed to
-            see other user's ratings and comments on the recipe.
-          </p>
-        </div>
-        <div className="monty-results__resultsRow">
-          {
-            recipeList.map((recipe, i) => (
-              <RecipeCard
-                key={i}
-                recipe={recipe}
-                onClick={() => this.selectRecipe(recipe.id)}
-              />
-            ))
-          }
-        </div>
-      </>
+          Try Again
+        </PrimaryButton>
+      </div>
     )
   }
+  return (
+    <>
+      <div
+        className="monty-results__header"
+      >
+        <h2>Your recipes are here</h2>
+        <p>
+          Monty has returned and brought some recipes straight from his own personal cookbook.
+          These recipes are based on the ingredients specified by yourself and can be viewed to
+          see other user's ratings and comments on the recipe.
+        </p>
+      </div>
+      <div className="monty-results__resultsRow">
+        {
+          list.map((recipe, i) => (
+            <RecipeCard
+              key={i}
+              recipe={recipe}
+              onClick={() => selectRecipe(recipe.id)}
+            />
+          ))
+        }
+      </div>
+    </>
+  )
 }
 
 export function mapStateToProps({ recipes, monty }) {
@@ -127,13 +116,13 @@ export function mapStateToProps({ recipes, monty }) {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   {
     getSearch,
     clearSearch
   }
-)(ResultsPage);
+)(ResultsPage));
 
 ResultsPage.propTypes = {
   getSearch: PropTypes.func,

@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router";
 
 import { getRecipe, clearRecipe } from '../../store/actions/recipes';
-import { history } from '../../store/store';
 
 import CommentArea from './commentArea/CommentArea';
 import RatingArea from '../../components/misc/ratingArea/RatingArea';
@@ -14,114 +13,98 @@ import CrumbLogo from '../../images/CrumbLogo';
 
 import PrimaryButton from '../../components/buttons/Buttons';
 
-import './RecipePageStyles.scss';
+import './RecipePage.scss';
 
-export class RecipePage extends Component {
-  state = {
-    editing: false,
-    createdByCurrentUser: false,
-  }
+const RecipePage = ({
+  user,
+  recipes,
+  match,
+  history,
+  ingredients,
+  getRecipe,
+  clearRecipe
+}) => {
+  const [editing, setEditing] = useState(false);
+  const [createdByUser, setCreated] = useState(false);
 
-  componentDidMount = () => {
-    const id = this.props.match.params.id;
-    // Get recipe
-    this.props.getRecipe(id, () => this.checkIfUserCreated());
-  }
+  useEffect(() => {
+    getRecipe(match.params.id, () => checkIfUserCreated());
+    return () => {
+      clearRecipe();
+    };
+  }, []);
 
-  componentWillUnmount = () => {
-    this.props.clearRecipe();
-  }
-
-  checkIfUserCreated = () => {
-    const { user } = this.props;
-    const recipe = this.props.recipes.selected;
-
+  function checkIfUserCreated() {
+    const recipe = recipes.selected;
     const checkRecipes = user.recipes.findIndex(r => r === recipe.id);
 
     if (checkRecipes !== -1) {
-      this.setState(() => ({
-        createdByCurrentUser: true,
-      }));
+      setCreated(true)
     }
   }
 
-  closeRecipePage = () => {
-    history.goBack();
-  }
-
-  toggleEditing = () => {
-    this.setState((prevState) => ({
-      editing: !prevState.editing,
-    }))
-  }
-
-  render() {
-    const recipe = this.props.recipes.selected;
-    const { list } = this.props.ingredients;
-    if (!recipe) return null;
-
-    return (
-      <div className="recipePage__recipePageContainer">
-        <div className="recipePage__recipePageActions">
-          {
-            this.state.createdByCurrentUser &&
-              <PrimaryButton
-                onClick={this.toggleEditing}
-              >
-                Edit
-              </PrimaryButton>
-          }
-          <PrimaryButton
-            onClick={() => this.closeRecipePage()}
-          >
-            Back
-          </PrimaryButton>
-        </div>
-        <div className="recipePage__recipePageWrapper">
-          <div className="recipePage__recipePageDetails">
-            <div>
-              <h2>{recipe.name}</h2>
-              <div className="recipePage__recipePageStats">
-                <DifficultyArea
-                  difficulty={recipe.difficulty}
-                  scale={10}
-                />
-                <div>
-                  <h4>CREATED BY</h4>
-                  <div>{recipe.createdBy.name || 'Anon'}</div>
-                </div>
-                <RatingArea
-                  recipe={recipe}
-                  user={this.props.user}
-                  enableRating
-                />
+  const recipe = recipes.selected;
+  const { list } = ingredients;
+  if (!recipe) return null;
+  return (
+    <div className="recipePage__recipePageContainer">
+      <div className="recipePage__recipePageActions">
+        {
+          createdByUser &&
+            <PrimaryButton
+              onClick={() => setEditing(!editing)}
+            >
+              Edit
+            </PrimaryButton>
+        }
+        <PrimaryButton
+          onClick={() => history.goBack()}
+        >
+          Back
+        </PrimaryButton>
+      </div>
+      <div className="recipePage__recipePageWrapper">
+        <div className="recipePage__recipePageDetails">
+          <div>
+            <h2>{recipe.name}</h2>
+            <div className="recipePage__recipePageStats">
+              <DifficultyArea
+                difficulty={recipe.difficulty}
+                scale={10}
+              />
+              <div>
+                <h4>CREATED BY</h4>
+                <div>{recipe.createdBy.name || 'Anon'}</div>
               </div>
-            </div>
-            <div className="recipePage__recipePageImage">
-              <CrumbLogo
-                items={recipe.ingredients}
+              <RatingArea
+                recipe={recipe}
+                user={user}
+                enableRating
               />
             </div>
           </div>
-          <div className="recipePage_recipePageIngredients">
-            <RecipeDetails
-              recipe={recipe}
-              ingredients={list}
-              editing={this.state.editing}
-              editDone={this.toggleEditing}
+          <div className="recipePage__recipePageImage">
+            <CrumbLogo
+              items={recipe.ingredients}
             />
           </div>
-          <CommentArea
-            recipeId={recipe.id}
-            commentIds={recipe.comments}
+        </div>
+        <div className="recipePage_recipePageIngredients">
+          <RecipeDetails
+            recipe={recipe}
+            ingredients={list}
+            editing={editing}
+            editDone={() => setEditing(false)}
           />
         </div>
+        <CommentArea
+          recipeId={recipe.id}
+          commentIds={recipe.comments}
+        />
       </div>
-    )
-  }
+    </div>
+  )
 }
-
-const connectRecipePage = withRouter(RecipePage);
 
 export function mapStateToProps({ user, ingredients, recipes }) {
   return {
@@ -131,13 +114,13 @@ export function mapStateToProps({ user, ingredients, recipes }) {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   {
     getRecipe,
     clearRecipe
   }
-)(connectRecipePage);
+)(RecipePage));
 
 RecipePage.propTypes = {
   user: PropTypes.object,

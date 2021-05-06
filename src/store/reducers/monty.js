@@ -6,7 +6,7 @@ export const GET_SEARCH = 'GET_SEARCH';
 // Misc.
 export const CLEAR_SEARCH = 'CLEAR_SEARCH';
 
-export default (
+const monty = (
   state = {
     selected: null,
   }, action) => {
@@ -23,3 +23,5 @@ export default (
       return state;
   }
 };
+
+export default monty;

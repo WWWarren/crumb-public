@@ -9,7 +9,7 @@ export const UPDATE_RECIPE = 'UPDATE_RECIPE';
 // Misc.
 export const CLEAR_RECIPE = 'CLEAR_RECIPE';
 
-export default (
+const recipes = (
   state = {
     list: [],
     selected: null,
@@ -54,3 +54,5 @@ export default (
       return state;
   }
 };
+
+export default recipes;

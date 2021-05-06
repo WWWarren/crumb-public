@@ -1,27 +1,24 @@
-import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import uniqid from 'uniqid';
 import { Field } from 'redux-form';
 
 import Select from '../../form/select/Select';
 import PrimaryButton from '../../buttons/Buttons';
 
-import './IngredientListStyles.scss';
+import './IngredientList.scss';
 
-class IngredientList extends Component {
-  state = {
-    fields: [],
-  }
+const IngredientList = ({ ingredients, name, callback }) => {
+  const [list, setList] = useState([]);
 
   //
   // Add an ingredient item/field to a component
-  addListItem = () => {
-    const fields = [...this.state.fields];
+  function addListItem() {
+    const listItems = [...list];
 
     // Assign an id to the field which can be used in other functions to select it
     const id = `ingredient${uniqid()}`;
 
-    const field =
+    const item =
       <div
         key={id}
         id={id}
@@ -31,67 +28,54 @@ class IngredientList extends Component {
           name={id}
           component={Select}
           props={{
-            items: this.props.ingredients,
+            items: ingredients,
             itemKey: 'name'
           }}
-          onChange={
-            (status) => {
-              console.log(status);
-            }
-          }
         />
         <PrimaryButton
           type="button"
-          onClick={() => this.removeListItem(id)}
+          onClick={() => removeListItem(id)}
         >
           Remove
         </PrimaryButton>
       </div>
 
-    fields.push(field);
-    this.setState(() => ({
-      fields,
-    }))
+    listItems.push(item);
+    setList(listItems);
+    // if (callback && listItems) callback(listItems);
   }
 
-  removeListItem = (id) => {
-    const arr = [...this.state.fields];
-    const fields = arr.filter(f => f.props.id !== id);
+  function removeListItem(id) {
+    const arr = [...list];
+    const listItems = arr.filter(f => f.props.id !== id);
 
-    this.setState(() => ({
-      fields,
-    }));
+    setList(listItems);
   }
 
-  render() {
-    const { name } = this.props;
-    return (
-      <div className="misc-ingredientList__container">
-        <div className="misc-ingredientList__header">
-          <h3>{name}</h3>
-          <PrimaryButton
-            type="button"
-            onClick={() => this.addListItem()}
-            border="2px solid grey"
-          >
-            Add Item
-          </PrimaryButton>
-        </div>
-        <div className="misc-ingredientList__content">
-          {
-            this.state.fields.length === 0 &&
-            <div className="misc-ingredientList__noFieldsMessage">
-              <h4>To add an ingredient press the 'Add Item' button above this message :)</h4>
-            </div>
-
-          }
-          {
-            this.state.fields.map(f => f)
-          }
-        </div>
+  return (
+    <div className="misc-ingredientList__container">
+      <div className="misc-ingredientList__header">
+        <h3>{name}</h3>
+        <PrimaryButton
+          type="button"
+          onClick={() => addListItem()}
+          border="2px solid grey"
+        >
+          Add Item
+        </PrimaryButton>
       </div>
-    )
-  }
+      <div className="misc-ingredientList__content">
+        {
+          list.length === 0 &&
+          <div className="misc-ingredientList__noFieldsMessage">
+            <h4>To add an ingredient press the 'Add Item' button above this message :)</h4>
+          </div>
+
+        }
+        {list.map(f => f)}
+      </div>
+    </div>
+  )
 }
 
 export default IngredientList;

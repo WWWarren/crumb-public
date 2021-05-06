@@ -71,6 +71,7 @@ export function getUser(id) {
 //
 // Post user to database
 export function postUser(values, callback) {
+  console.log(values);
   return (dispatch, getState) => {
     //
     // Dispatch user to database on successful form submission
@@ -97,17 +98,17 @@ export function postUser(values, callback) {
 //
 // Update user object in database and store
 export function updateUserDetails(values) {
+  console.log(values);
   return (dispatch) => {
     //
     // Dispatch user to database
     return database.ref(`/users/${values.id}`).update(values).then((ref) => {
-      console.log('hit');
-        //
-        // Dispatch updated recipe to redux
-        dispatch({
-          type: UPDATE_USER,
-          payload: values
-        });
+      //
+      // Dispatch updated recipe to redux
+      dispatch({
+        type: UPDATE_USER,
+        payload: values
+      });
     })
     .catch(() => {
       //

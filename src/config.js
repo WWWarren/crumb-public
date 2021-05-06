@@ -1,16 +1,18 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
 
 const config = {
-  apiKey: "API_KEY",
-  authDomain: "AUTH_DOMAIN",
-  databaseURL: "DATABASE_URL",
-  projectId: "PROJECT_ID",
+  apiKey: "AIzaSyCglhxPlUy404O_pmZMKnLkW8yjMPc3yZE",
+  authDomain: "crumb-999d2.firebaseapp.com",
+  databaseURL: "https://crumb-999d2.firebaseio.com",
+  projectId: "crumb-999d2",
   storageBucket: "",
-  messagingSenderId: "MESSAGING_SENDER_ID",
-  appId: "APP_ID"
+  messagingSenderId: "583760081023",
+  appId: "1:583760081023:web:bc987924d2cff273"
 }
 
 firebase.initializeApp(config);
-const database = firebase.database();
+const data = firebase.database();
 
-export { firebase, database as default };
+export { firebase, data as default };

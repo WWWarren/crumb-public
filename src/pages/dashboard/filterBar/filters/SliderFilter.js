@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import Slider from 'rc-slider';
 
-import './SliderFilterStyles.scss';
+import './SliderFilter.scss';
 
 const Handle = Slider.Handle;
 const handle = (props) => {
@@ -21,47 +21,35 @@ const handle = (props) => {
   );
 };
 
-class SliderFilter extends Component {
-  state = {
-    value: 0,
-  }
+const SliderFilter = ({ resetFilter, onChange, step, min, max, marks }) => {
+  const [value, setValue] = useState(0);
 
-  componentDidUpdate = (prevProps) => {
-    const { resetFilter } = this.props;
+  useEffect(() => {
+    setValue(0);
+  }, [resetFilter]);
 
-    // Reset slider is reset filter prop is true
-    if (prevProps.resetFilter !== resetFilter) {
-      this.setState(() => ({
-        value: 0,
-      }))
-    }
-  }
-
-  onChange = (value) => {
+  function changeValue(value) {
     // Send value to prop to use in filter container, etc.
-    this.props.onChange(value);
+    if (value > 0) {
+      onChange(value);
+    }
 
     // Set slider local state to allow resetting, etc.
-    this.setState(() => ({
-      value: value,
-    }))
+    setValue(value);
   }
 
-  render() {
-    const { step, min, max, marks } = this.props;
-    return (
-      <Slider
-        allowCross={false}
-        handle={handle}
-        step={step}
-        min={min}
-        max={max}
-        marks={marks}
-        onChange={this.onChange}
-        value={this.state.value}
-      />
-    )
-  }
+  return (
+    <Slider
+      allowCross={false}
+      handle={handle}
+      step={step}
+      min={min}
+      max={max}
+      marks={marks}
+      onChange={(v) => changeValue(v)}
+      value={value}
+    />
+  )
 }
 
 export default SliderFilter;

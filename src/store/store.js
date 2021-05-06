@@ -32,11 +32,13 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 // Create history variable to be used for all components inside and outside the routing switch
-export const history = createBrowserHistory({ basename: '/crumb' });
+export const history = createBrowserHistory({ basename: '/', forceRefresh: true });
 
 // Create redux store & Add redux persist
-export default () => {
+const storeObj = () => {
   const store = createStore(persistedReducer, applyMiddleware(thunk));
   const persistor = persistStore(store);
   return { persistor, store };
 };
+
+export default storeObj;

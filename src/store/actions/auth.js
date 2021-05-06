@@ -12,13 +12,14 @@ import { getUser } from './user';
 //
 // Get user from database and add them to redux store
 export function logInUser(values, callback) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     return firebase.auth().signInWithEmailAndPassword(values.email, values.password)
     .then((data) => {
       dispatch(getUser(data.user.uid));
     })
-    .catch((error) => {
-      return callback();
+    .catch(() => {
+      console.log('hit');
+      if (callback) callback('error');
     })
   };
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { updateRecipe } from '../../../store/actions/recipes';
@@ -6,15 +6,13 @@ import { getRecipeRating } from '../../../store/actions/ratings';
 
 import Icon from '../../../images/Icon';
 
-import './RatingAreaStyles.scss';
+import './RatingArea.scss';
 
-class RecipeCard extends Component {
-  state = {
-    showSetRatingBox: false,
-    starHovered: 0,
-  }
+const RecipeCard = ({ recipe, user, updateRecipe, enableRating }) => {
+  const [ratingBoxVisible, setRatingBox] = useState(false);
+  const [starHovered, setStarHovered] = useState(0);
 
-  showRecipeRating = () => {
+  function showRecipeRating() {
     const arr = [];
     for (var i = 0; i < 5; i++) {
       arr.push(i);
@@ -22,22 +20,8 @@ class RecipeCard extends Component {
     return arr;
   }
 
-  toggleRatingBox = () => {
-    this.setState((prevState) => ({
-      showSetRatingBox: !prevState.showSetRatingBox,
-    }))
-  }
-
-  setStarHovered = (star) => {
-    this.setState(() => ({
-      starHovered: star
-    }))
-  }
-
-  saveRating = (value) => {
-    const recipe = this.props.recipe;
-    const { user } = this.props;
-    let rating = this.props.recipe.rating || [];
+  function saveRating(value) {
+    let rating = recipe.rating || [];
 
     // Create new rating object & push to rating array
     const newRating = {
@@ -65,85 +49,79 @@ class RecipeCard extends Component {
       ...recipe,
       rating
     }
-    this.props.updateRecipe(obj);
 
-    this.setState(() => ({
-      showSetRatingBox: false,
-      starHovered: 0,
-    }))
+    updateRecipe(obj);
+    setRatingBox(false);
+    setStarHovered(0);
   }
 
-  render(){
-    const { enableRating, recipe } = this.props;
+  // Get rating of recipe and stars
+  const rating = getRecipeRating(recipe);
+  const stars = showRecipeRating();
 
-    // Get rating of recipe and stars
-    const rating = getRecipeRating(recipe);
-    const stars = this.showRecipeRating();
-
-    return (
-      <div className="recipeCard-ratingArea__ratingAreaContainer">
-        <div className="recipeCard-ratingArea__ratingAreaTitle">
-          <h4>RATING</h4>
-          {
-            enableRating &&
-              <div
-                onClick={this.toggleRatingBox}
-                className="recipeCard-ratingArea__ratingAreaButton"
-                style={{
-                  color: !this.state.showSetRatingBox ? '#7EA16B' : '#DA9F93'
-                }}
-              >
-                - {this.state.showSetRatingBox ? 'Close' : 'Rate Recipe'}
-              </div>
-          }
-        </div>
+  return (
+    <div className="recipeCard-ratingArea__ratingAreaContainer">
+      <div className="recipeCard-ratingArea__ratingAreaTitle">
+        <h4>RATING</h4>
         {
-          !this.state.showSetRatingBox &&
-          <div
-            className="recipeCard-ratingArea__ratingAreaDetails"
-          >
-            <Icon
-              icon='star'
-              className={`
-                recipeCard-ratingArea__ratingAreaIcon
-                recipeCard-ratingArea__ratingAreaIconActive
-              `}
-            />
-            <span>{rating.totalRating || 0}</span>
-            <span>({rating.numberOfRatings || 0})</span>
-          </div>
-        }
-        {
-          (enableRating && this.state.showSetRatingBox) &&
-            <>
-              <div
-                className="recipeCard-ratingArea__ratingAreaBox"
-              >
-                {
-                  stars.map(s => (
-                    <span
-                      className="recipeCard-ratingArea__ratingAreaIconBox"
-                      key={s}
-                      onMouseOver={() => this.setStarHovered(s + 1)}
-                    >
-                      <Icon
-                        icon='star'
-                        className={`
-                          recipeCard-ratingArea__ratingAreaIcon
-                          ${rating.totalRating >= s + 1 ? 'recipeCard-ratingArea__ratingAreaIconActive' : ''}
-                          ${this.state.starHovered >= s + 1 ? 'recipeCard-ratingArea__ratingAreaIconHover' : '' }
-                        `}
-                        onClick={() => this.saveRating(s + 1)}
-                      />
-                    </span>
-                  ))
-                }
-              </div>
-            </>
+          enableRating &&
+            <div
+              onClick={() => setRatingBox(!ratingBoxVisible)}
+              className="recipeCard-ratingArea__ratingAreaButton"
+              style={{
+                color: !ratingBoxVisible ? '#7EA16B' : '#DA9F93'
+              }}
+            >
+              - {ratingBoxVisible ? 'Close' : 'Rate Recipe'}
+            </div>
         }
       </div>
-    )
-  }
+      {
+        !ratingBoxVisible &&
+        <div
+          className="recipeCard-ratingArea__ratingAreaDetails"
+        >
+          <Icon
+            icon='star'
+            className={`
+              recipeCard-ratingArea__ratingAreaIcon
+              recipeCard-ratingArea__ratingAreaIconActive
+            `}
+          />
+          <span>{rating.totalRating || 0}</span>
+          <span>({rating.numberOfRatings || 0})</span>
+        </div>
+      }
+      {
+        (enableRating && ratingBoxVisible) &&
+          <>
+            <div
+              className="recipeCard-ratingArea__ratingAreaBox"
+            >
+              {
+                stars.map(s => (
+                  <span
+                    className="recipeCard-ratingArea__ratingAreaIconBox"
+                    key={s}
+                    onMouseOver={() => setStarHovered(s + 1)}
+                  >
+                    <Icon
+                      icon='star'
+                      className={`
+                        recipeCard-ratingArea__ratingAreaIcon
+                        ${rating.totalRating >= s + 1 ? 'recipeCard-ratingArea__ratingAreaIconActive' : ''}
+                        ${starHovered >= s + 1 ? 'recipeCard-ratingArea__ratingAreaIconHover' : '' }
+                      `}
+                      onClick={() => saveRating(s + 1)}
+                    />
+                  </span>
+                ))
+              }
+            </div>
+          </>
+      }
+    </div>
+  )
 }
 
 export default connect(

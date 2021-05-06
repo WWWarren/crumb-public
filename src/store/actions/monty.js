@@ -1,6 +1,5 @@
 // Packages, config, etc.
 import database from '../../config';
-import { history } from '../store';
 
 // Reducers
 import { GET_SEARCH, CLEAR_SEARCH } from '../reducers/monty';
@@ -46,13 +45,12 @@ export function getSearch(id, callback) {
 
 //
 // Post search record to database
-export function postSearch(values) {
+export function postSearch(values, history) {
   return () => {
     //
     // Dispatch search to database
     return database.ref(`/searches`).push(values)
     .then((data) => {
-      console.log(data.key);
       history.push(`/monty/${data.key}`)
     })
     .catch(() => {

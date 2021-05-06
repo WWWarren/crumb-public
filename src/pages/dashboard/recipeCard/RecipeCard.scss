@@ -6,8 +6,8 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  flex: 1 0 300px;
-  margin: $mMargin $sMargin 0;
+  flex: 0 32%;
+  margin-bottom: 2%;
 
   .dashboard-recipeCard__recipeCardDetails {
     padding: $sPadding;

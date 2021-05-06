@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import { Link } from "react-router-dom";
@@ -10,25 +10,26 @@ import { updateUserEmail, updateUserPassword } from '../../store/actions/user';
 import Form from '../../components/form/FormContainer';
 import TextField from '../../components/form/textfield/TextField';
 
-import './PreferencesPageStyles.scss';
+import './PreferencesPage.scss';
 
-export class PreferencesPage extends Component {
-  state = {
-    searches: [],
-    emailFormSubmissionFailed: false,
-    passwordFormSubmissionFailed: false,
-    emailFormSubmissionSuccess: false,
-    passwordFormSubmissionSuccess: false,
-  }
+const PreferencesPage = ({ user }) => {
+  const [searchList, setSearch] = useState(null);
+  const [failed, setFailed] = useState({
+    email: false,
+    password: false,
+  });
+  const [success, setSuccess] = useState({
+    email: false,
+    password: false,
+  });
 
-  componentDidMount = () => {
-    this.getUserSearches();
-  }
+  useEffect(() => {
+    getUserSearches();
+  });
 
-  getUserSearches = () => {
+  function getUserSearches() {
     database.ref(`/searches`).once('value')
     .then((snapshot) => {
-      const { user } = this.props;
 
       //
       // Create array of searches from the returned values
@@ -47,108 +48,106 @@ export class PreferencesPage extends Component {
       //
       // Only show latest 10 searches
       const searches = allSearches.reverse().slice(0, 10);
-
-      this.setState(() => ({
-        searches,
-      }));
+      setSearch(searches);
     })
     .catch(() => {
       console.log('list not returned');
     })
   }
 
-  updateDetails = (values, form) => {
-    let user = {
-      ...this.props.user,
-    }
-
+  function updateDetails(values, form) {
     if (form === 'email') {
-      user = {
-        ...this.props.user,
+      const userWithUpdatedEmail = {
+        ...user,
         email: values.email,
       }
-      updateUserEmail(user, (status) => {
-        this.setState(() => ({
-          emailFormSubmissionFailed: status === 'failure' ? true : false,
-          emailFormSubmissionSuccess: status === 'success' ? true : false,
-        }));
+      updateUserEmail(userWithUpdatedEmail, (status) => {
+        setFailed({
+          ...failed,
+          email: status === 'failure' ? true : false,
+        })
+        setSuccess({
+          ...success,
+          email: status === 'success' ? true : false,
+        })
       })
     } else if (form === 'password') {
       updateUserPassword(values, (status) => {
-        this.setState(() => ({
-          passwordFormSubmissionFailed: status === 'failure' ? true : false,
-          passwordFormSubmissionSuccess: status === 'success' ? true : false,
-        }));
+        setFailed({
+          ...failed,
+          password: status === 'failure' ? true : false,
+        })
+        setSuccess({
+          ...success,
+          password: status === 'success' ? true : false,
+        })
       })
     }
   }
 
-  render() {
-    const { searches } = this.state;
-    return (
-      <div className="preferences__pageContainer">
-        <div className="preferences__pageBlock">
-          <h3>Change Email</h3>
-          <p>Please enter the new email you would like to use with your account.</p>
-          <Form
-            form="changeEmail"
-            submitText="Update Email"
-            onSubmit={(values) => this.updateDetails(values, 'email')}
-            errorStatus={this.state.emailFormSubmissionFailed}
-            errorMessage="Email not successfully updated. Please enter a new one."
-            successfulSubmission={this.state.emailFormSubmissionSuccess}
-            successMessage="Email successfully changed."
-          >
-            <Field
-              name="email"
-              type="email"
-              required
-              component={TextField}
-            />
-          </Form>
-        </div>
-        <div className="preferences__pageBlock">
-          <h3>Change Password</h3>
-          <p>Please enter the new password you would like to use with your account.</p>
-          <Form
-            form="changePassword"
-            submitText="Update Password"
-            onSubmit={(values) => this.updateDetails(values, 'password')}
-            errorStatus={this.state.passwordFormSubmissionFailed}
-            errorMessage="Password Updated"
-            successfulSubmission={this.state.passwordFormSubmissionSuccess}
-            successMessage="Password successfully changed."
-          >
-            <Field
-              name="password"
-              type="password"
-              required
-              component={TextField}
-            />
-          </Form>
-        </div>
-        <div className="preferences__pageBlock">
-          <h3>View Past Monty Searches</h3>
-          <p>
-            Below are the last 10 searches requested for Monty. Clicking on a search below will
-            take you to the results of said search.
-          </p>
-          {
-            searches.map(s => (
-              <Link
-                to={`/monty/${s.id}`}
-                className="preferences__searchLink"
-                key={s.id}
-              >
-                {s.createdOn}
-              </Link>
-            ))
-          }
-        </div>
+  return (
+    <div className="preferences__pageContainer">
+      <div className="preferences__pageBlock">
+        <h3>Change Email</h3>
+        <p>Please enter the new email you would like to use with your account.</p>
+        <Form
+          form="changeEmail"
+          submitText="Update Email"
+          onSubmit={(values) => updateDetails(values, 'email')}
+          errorStatus={failed.email}
+          errorMessage="Email not successfully updated. Please enter a new one."
+          successfulSubmission={success.email}
+          successMessage="Email successfully changed."
+        >
+          <Field
+            name="email"
+            type="email"
+            required
+            component={TextField}
+          />
+        </Form>
       </div>
-    )
-  }
-}
+      <div className="preferences__pageBlock">
+        <h3>Change Password</h3>
+        <p>Please enter the new password you would like to use with your account.</p>
+        <Form
+          form="changePassword"
+          submitText="Update Password"
+          onSubmit={(values) => updateDetails(values, 'password')}
+          errorStatus={failed.password}
+          errorMessage="Password Updated"
+          successfulSubmission={success.password}
+          successMessage="Password successfully changed."
+        >
+          <Field
+            name="password"
+            type="password"
+            required
+            component={TextField}
+          />
+        </Form>
+      </div>
+      <div className="preferences__pageBlock">
+        <h3>View Past Monty Searches</h3>
+        <p>
+          Below are the last 10 searches requested for Monty. Clicking on a search below will
+          take you to the results of said search.
+        </p>
+        {
+          searchList.map(s => (
+            <Link
+              to={`/monty/${s.id}`}
+              className="preferences__searchLink"
+              key={s.id}
+            >
+              {s.createdOn}
+            </Link>
+          ))
+        }
+      </div>
+    </div>
+  )
+} 
 
 export function mapStateToProps({ user }) {
   return {

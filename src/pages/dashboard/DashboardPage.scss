@@ -4,12 +4,14 @@
 .dashboard__recipesRow {
   display: flex;
   justify-content: space-between;
+  padding: $mPadding;
   margin-bottom: 100px;
 
   .dashboard__recipesColumn {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
   }
 }
 

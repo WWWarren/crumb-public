@@ -1,7 +1,7 @@
 // Get
 export const GET_INGREDIENTS = 'GET_INGREDIENTS';
 
-export default (
+const ingredients = (
   state = {
     list: [],
   }, action) => {
@@ -15,3 +15,5 @@ export default (
       return state;
   }
 };
+
+export default ingredients;

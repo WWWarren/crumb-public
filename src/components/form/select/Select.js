@@ -1,38 +1,35 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import Scrollbar from 'react-scrollbars-custom';
 
 import arrowDownIcon from '../../../images/icons/arrow-down-icon.svg';
 import arrowUpIcon from '../../../images/icons/arrow-up-icon.svg';
 
-import './SelectStyles.scss';
+import './Select.scss';
 
-class SelectBox extends Component {
-  constructor(props) {
-    super(props);
+const SelectBox = ({ items, itemKey, selectBoxWidth, selectItem, id }) => {
+  const [container] = useState(() => {
+    const el = document.createElement('div');
+    return el
+  })
 
-    this.root = document.querySelector(`.form-select__${props.id}`);
-    this.el = document.createElement('div');
-  }
+  useEffect(() => {
+    const root = document.querySelector(`.form-select__${id}`);
+    root.appendChild(container);
+    return () => {
+      root.removeChild(container);
+    }
+  }, [container, id])
 
-  componentDidMount = () => {
-    this.root.appendChild(this.el);
-  }
-
-  componentWillUnmount = () => {
-    this.root.removeChild(this.el);
-  }
-
-  showItems = () => {
-    const { items } = this.props;
+  function showItems() {
     if (items) {
       const item = items.map((item, i) => (
         <div
           key={i}
-          onClick={() => this.props.selectItem(item)}
+          onClick={() => selectItem(item)}
           className="form-select__selectOption"
         >
-          <span className="form-select__selectOptionName">{item[this.props.itemKey]}</span>
+          <span className="form-select__selectOptionName">{item[itemKey]}</span>
           {item.type ? <div className="form-select__selectOptionType">{item.type}</div> : ''}
         </div>
       ))
@@ -40,85 +37,62 @@ class SelectBox extends Component {
     };
   }
 
-  render() {
-    return ReactDOM.createPortal(
-      <Scrollbar
-        style={{ width: this.props.selectBoxWidth + 3, height: 125, position: 'fixed', zIndex: 999 }}
+  return ReactDOM.createPortal(
+    <Scrollbar
+      style={{ width: selectBoxWidth + 3, height: 125, position: 'fixed', zIndex: 999 }}
+    >
+      <div
+        className="form-select__selectOptions"
       >
-        <div
-          className="form-select__selectOptions"
-        >
-          {this.showItems()}
-        </div>
-      </Scrollbar>,
-      this.el,
-    );
-  }
+        {showItems()}
+      </div>
+    </Scrollbar>,
+    container,
+  );
 }
 
+const Select = ({ value, input, onClick, items, itemKey, addMargin }) => {
+  const selectBox = useRef();
+  const [selected, setSelected] = useState(value);
+  const [open, setOpen] = useState(false);
 
-class Select extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selected: props.value ? props.value : null,
-      open: false,
-    }
-
-    this.selectBox = React.createRef();
-  }
-
-  toggleOpenOptions = () => {
-    this.setState((prevState) => ({
-      open: !prevState.open
-    }))
-  }
-
-  selectItem = (item) => {
-    const { input, onClick } = this.props;
+  function selectItem(item) {
     input.onChange(item.id);
 
-    this.setState(() => ({
-      open: false,
-      selected: item[this.props.itemKey],
-    }))
+    setOpen(false);
+    setSelected(item[itemKey]);
 
     if (onClick) onClick(item);
   }
 
-  render() {
-    const { input } = this.props;
-
-    return (
+  return (
+    <div
+      className={`form-select__selectContainer form-select__${input.name}`}
+      style={{
+        marginBottom: addMargin ? 10 : 0,
+      }}
+    >
       <div
-        className={`form-select__selectContainer form-select__${input.name}`}
-        style={{
-          marginBottom: this.props.addMargin ? 10 : 0,
-        }}
+        {...input}
+        className={`form-select__selectBox ${open ? 'form-select__selectBox_open' : ''}`}
+        onClick={() => setOpen(!open)}
+        ref={selectBox}
       >
-        <div
-          {...input}
-          className={`form-select__selectBox ${this.state.open ? 'form-select__selectBox_open' : ''}`}
-          onClick={() => this.toggleOpenOptions()}
-          ref={this.selectBox}
-        >
-          {this.state.selected ? this.state.selected : 'Select'}
-          <img className="form-select__selectArrow" src={this.state.open ? arrowUpIcon : arrowDownIcon} alt="" />
-        </div>
-        {
-          this.state.open &&
-            <SelectBox
-              id={input.name}
-              items={this.props.items}
-              itemKey={this.props.itemKey}
-              selectItem={this.selectItem}
-              selectBoxWidth={this.selectBox.current ? this.selectBox.current.clientWidth : 0}
-            />
-        }
+        {selected ? selected : 'Select'}
+        <img className="form-select__selectArrow" src={open ? arrowUpIcon : arrowDownIcon} alt="" />
       </div>
-    )
-  }
+      {
+        open &&
+          <SelectBox
+            id={input.name}
+            items={items}
+            itemKey={itemKey}
+            selectItem={selectItem}
+            selectBoxWidth={selectBox.current ? selectBox.current.clientWidth : 0}
+          />
+      }
+    </div>
+  )
 }
 
 export default Select;
